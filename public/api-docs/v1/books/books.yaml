@@ -1,0 +1,33 @@
+CreateBookRequest:
+  type: object
+  properties:
+    text:
+      type: string
+      description: Text
+      example: "Example text"
+    age:
+      type: integer
+      description: Age param
+      example: 14
+
+Book:
+  type: object
+  properties:
+    id:
+      type: integer
+      description: ID
+    age:
+      type: integer
+      description: Age
+  required:
+    - id
+
+BookResponse:
+  type: object
+  properties:
+    data:
+      $ref: '#/Book'
+    meta:
+      type: object
+  required:
+    - data

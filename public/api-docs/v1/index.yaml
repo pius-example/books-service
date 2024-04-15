@@ -1,0 +1,101 @@
+openapi: 3.0.3
+info:
+  title: Books service
+  contact:
+    name: API Support
+    url: https://ensi.tech/contacts
+    email: mail@greensight.ru
+  version: 1.0.0
+  description: Books service
+servers:
+  - url: /api/v1
+tags:
+  - name: books
+    description: Books
+paths:
+  /books:
+    post:
+      tags:
+        - books
+      operationId: createBook
+      x-lg-handler: 'App\Http\ApiV1\Modules\Books\Controllers\BooksController@create'
+      summary: Create объекта типа Book
+      description: Create объекта типа Book
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: './books/books.yaml#/CreateBookRequest'
+      responses:
+        "201":
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: './books/books.yaml#/BookResponse'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "500":
+          $ref: '#/components/responses/ServerError'
+
+  /books/{id}:
+    get:
+      tags:
+        - books
+      operationId: getBook
+      x-lg-handler: 'App\Http\ApiV1\Modules\Books\Controllers\BooksController@get'
+      x-lg-route-name: 'getBook'
+      x-lg-skip-request-generation: true
+      summary: Получение объекта типа Book
+      description: Получение объекта типа Book
+      parameters:
+        - $ref: '#/components/parameters/PathId'
+      responses:
+        "200":
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: './books/books.yaml#/BookResponse'
+        "404":
+          $ref: '#/components/responses/NotFound'
+        "500":
+          $ref: '#/components/responses/ServerError'
+components:
+  parameters:
+    QueryInclude:
+      $ref: './common_parameters.yaml#/QueryInclude'
+    PathId:
+      $ref: './common_parameters.yaml#/PathId'
+  schemas:
+    EmptyDataResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          nullable: true
+        meta:
+          type: object
+      required:
+          - data
+    PaginationTypeEnum:
+      $ref: './common_schemas.yaml#/PaginationTypeEnum'
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: './errors.yaml#/ErrorResponse'
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: './errors.yaml#/ErrorResponse'
+    ServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: './errors.yaml#/ErrorResponse'
